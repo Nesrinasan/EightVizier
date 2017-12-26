@@ -13,4 +13,5 @@ public class OyunButon extends Button {
         this.setCaption(caption);
     }
 
+
 }
