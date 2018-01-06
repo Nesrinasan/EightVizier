@@ -7,8 +7,12 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.*;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import javafx.application.Application;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window
@@ -121,6 +125,8 @@ public class MyUI extends UI {
                 if (selectedButton.getIcon().equals(FontAwesome.RA)) {
                     selectedButton.setIcon(FontAwesome.CIRCLE_O);
                     selectedButton.removeStyleName(ValoTheme.BUTTON_DANGER);
+                    selectedButton.removeStyleName(ValoTheme.BUTTON_FRIENDLY);
+                    ControlWin();
 
                 } else {
                     Map<Integer, Integer> dataSecbtn = (Map<Integer, Integer>) selectedButton.getData();
@@ -132,17 +138,16 @@ public class MyUI extends UI {
                             xCrossLocal = key;
                         }
 
-
                         horizontalButtonCount = horizontalButtonControl(horizontalLayout, horizontalButtonCount);
 
                         verticalButtonCount = verticalButtonControl(genelKontrol, result, verticalButtonCount);
 
                         /**
-                         Sol tarafa doğru buton kontrolü
+                         Left side cross button control
                          */
                         crossLeftCount = crossLeftCount(buttonList, xCrossLocal, yCrossLocal, crossLeftCount);
                         /**
-                         sağ tarafa doğru çarpraz buton kontrolü
+                         Right side cross button control
                          */
 
                         crossRightCount = crossRightCount(buttonList, xCrossLocal, yCrossLocal, crossRightCount);
@@ -150,7 +155,27 @@ public class MyUI extends UI {
                         if (horizontalButtonCount == 8 && verticalButtonCount == 8 && crossLeftCount == 0 && crossRightCount == 0) {
                             selectedButton.setIcon(FontAwesome.RA);
                             selectedButton.addStyleName(ValoTheme.BUTTON_DANGER);
+
                         }
+                        ControlWin();
+                    }
+                }
+            }
+
+            private void ControlWin() {
+                List<Button> buttonListForWin = buttonList.stream().filter(button -> (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA))).collect(Collectors.toList());
+                if (buttonListForWin.size() == 8) {
+                    Notification.show("CONGRATULATIONS, YOU WON", Notification.Type.HUMANIZED_MESSAGE);
+                    for (Button button : buttonListForWin) {
+                        button.removeStyleName(ValoTheme.BUTTON_DANGER);
+                        button.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+
+                    }
+                } else {
+                    for (Button button : buttonListForWin) {
+                        button.removeStyleName(ValoTheme.BUTTON_FRIENDLY);
+                        button.addStyleName(ValoTheme.BUTTON_DANGER);
+
                     }
                 }
             }
@@ -183,6 +208,7 @@ public class MyUI extends UI {
             if (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA)) {
                 button.setIcon(FontAwesome.CIRCLE_O);
                 button.removeStyleName(ValoTheme.BUTTON_DANGER);
+                button.removeStyleName(ValoTheme.BUTTON_FRIENDLY);
             }
         }
     }
