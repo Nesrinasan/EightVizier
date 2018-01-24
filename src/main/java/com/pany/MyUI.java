@@ -7,12 +7,9 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.*;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import javafx.application.Application;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window
@@ -22,13 +19,14 @@ import java.util.stream.Stream;
  * overridden to add component to the user interface and initialize non-component functionality.
  */
 @Theme("mytheme")
-public class MyUI extends UI {
+public class MyUI extends UI implements baseDesignGame {
     VerticalLayout mainLayout = new VerticalLayout();
     HorizontalLayout layout = null;
     Button buton;
     List<Button> buttonList;
     List<HorizontalLayout> horLayouts;
     Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol;
+    List<Button> buttonListExpectForNullData;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -37,7 +35,7 @@ public class MyUI extends UI {
         button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                createGameData(mainLayout);
+                putButtonsOnBoard(mainLayout);
                 startGame();
                 button.setEnabled(false);
             }
@@ -46,7 +44,8 @@ public class MyUI extends UI {
         setContent(mainLayout);
     }
 
-    private void createGameData(VerticalLayout mainLayout) {
+    @Override
+    public void putButtonsOnBoard(VerticalLayout mainLayout) {
 
         horLayouts = new ArrayList<>();
         buttonList = new ArrayList<>();
@@ -69,9 +68,9 @@ public class MyUI extends UI {
                 } else {
                     createGameButtons();
 
-                    addButtonLocal(buttonYLocal, buttonXLocal);
-                    buttonXLocal++;
                 }
+                buttonXLocal++;
+                addButtonLocal(buttonYLocal, buttonXLocal);
                 verticalButtonsControllerMap.put(buttonXLocal, FontAwesome.CIRCLE_O);
                 layout.addComponent(buton);
                 buttonList.add(buton);
@@ -84,13 +83,15 @@ public class MyUI extends UI {
         }
     }
 
-    private void addButtonLocal(int buttonYLocal, int buttonXLocal) {
+    @Override
+    public void addButtonLocal(int buttonYLocal, int buttonXLocal) {
         Map<Integer, Integer> butonLocals = new HashMap<>();
         butonLocals.put(buttonXLocal, buttonYLocal);
         buton.setData(butonLocals);
     }
 
-    private void createGameButtons() {
+    @Override
+    public void createGameButtons() {
         buton = new Button();
         buton.setWidth("50px");
         buton.setHeight("50px");
@@ -98,14 +99,26 @@ public class MyUI extends UI {
     }
 
     private void startGame() {
+
         for (HorizontalLayout horizontalLayout : horLayouts) {
             for (int i = 0; i <= 8; i++) {
-                buttonAddClickListener(buttonList, genelKontrol, horizontalLayout, i);
+
+                buttonAddClickListener(genelKontrol, horizontalLayout, i);
             }
         }
     }
 
-    private void buttonAddClickListener(final List<Button> buttonList, final Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol, final HorizontalLayout horizontalLayout, int i) {
+
+    private List<Button> ButtonListWithData() {
+        buttonListExpectForNullData = new ArrayList<>();
+        for (Button button : buttonList) {
+            buttonListExpectForNullData.add(button);
+        }
+        return buttonListExpectForNullData;
+    }
+
+
+    private void buttonAddClickListener(final Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol, final HorizontalLayout horizontalLayout, int i) {
         Button selectedButton = (Button) horizontalLayout.getComponent(i);
 
         selectedButton.addClickListener(new Button.ClickListener() {
@@ -138,19 +151,25 @@ public class MyUI extends UI {
                             xCrossLocal = key;
                         }
 
+                        /**
+                         * row button control
+                         */
                         horizontalButtonCount = horizontalButtonControl(horizontalLayout, horizontalButtonCount);
 
+                        /**
+                         * column button control
+                         */
                         verticalButtonCount = verticalButtonControl(genelKontrol, result, verticalButtonCount);
 
                         /**
                          Left side cross button control
                          */
-                        crossLeftCount = crossLeftCount(buttonList, xCrossLocal, yCrossLocal, crossLeftCount);
+                        crossLeftCount = crossLeftCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossLeftCount);
+
                         /**
                          Right side cross button control
                          */
-
-                        crossRightCount = crossRightCount(buttonList, xCrossLocal, yCrossLocal, crossRightCount);
+                        crossRightCount = crossRightCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossRightCount);
 
                         if (horizontalButtonCount == 8 && verticalButtonCount == 8 && crossLeftCount == 0 && crossRightCount == 0) {
                             selectedButton.setIcon(FontAwesome.RA);
@@ -239,21 +258,19 @@ public class MyUI extends UI {
 
         for (Button button : buttonList) {
             Map<Integer, Integer> MapControlForCrossRightButton = new HashMap<>();
-            if (button.getData() != null) {
-                MapControlForCrossRightButton.put(xCrossLocal, yCrossLocal);
-                if (button.getData().equals(MapControlForCrossRightButton)) {
-                    if (button.getIcon().equals(FontAwesome.RA)) {
-                        crossRightCount++;
+            MapControlForCrossRightButton.put(xCrossLocal, yCrossLocal);
+            if (button.getData().equals(MapControlForCrossRightButton)) {
+                if (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA)) {
+                    crossRightCount++;
 
-                    }
-
-                    MapControlForCrossRightButton = new HashMap<>();
-                    xCrossLocal = xCrossLocal - 1;
-                    yCrossLocal++;
-                    MapControlForCrossRightButton.put(xCrossLocal, yCrossLocal);
                 }
 
+                MapControlForCrossRightButton = new HashMap<>();
+                xCrossLocal = xCrossLocal - 1;
+                yCrossLocal++;
+                MapControlForCrossRightButton.put(xCrossLocal, yCrossLocal);
             }
+
         }
         return crossRightCount;
     }
@@ -270,20 +287,17 @@ public class MyUI extends UI {
 
         for (Button button : buttonList) {
             Map<Integer, Integer> MapControlForCrossLeftButton = new HashMap<>();
-            if (button.getData() != null) {
-                MapControlForCrossLeftButton.put(xCrossLocal, yCrossLocal);
-                if (button.getData().equals(MapControlForCrossLeftButton)) {
-                    if (button.getIcon().equals(FontAwesome.RA)) {
-                        crossLeftCount++;
+            MapControlForCrossLeftButton.put(xCrossLocal, yCrossLocal);
+            if (button.getData().equals(MapControlForCrossLeftButton)) {
+                if (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA)) {
+                    crossLeftCount++;
 
-                    }
-
-                    MapControlForCrossLeftButton = new HashMap<>();
-                    xCrossLocal = xCrossLocal + 1;
-                    yCrossLocal++;
-                    MapControlForCrossLeftButton.put(xCrossLocal, yCrossLocal);
                 }
 
+                MapControlForCrossLeftButton = new HashMap<>();
+                xCrossLocal = xCrossLocal + 1;
+                yCrossLocal++;
+                MapControlForCrossLeftButton.put(xCrossLocal, yCrossLocal);
             }
         }
 
@@ -296,16 +310,14 @@ public class MyUI extends UI {
             for (int i = 0; i <= 8; i++) {
                 Button kontroledilenButon = (Button) horizontal.getComponent(i);
                 Map<Integer, Integer> kontroledenDatas = (Map<Integer, Integer>) kontroledilenButon.getData();
-                if (kontroledenDatas != null && kontroledenDatas.size() > 0) {
                     Set<Integer> keyList = kontroledenDatas.keySet();
                     for (Integer keyKontrolEdenData : keyList) {
                         if (keyKontrolEdenData % 10 == sonuc) {
-                            if (kontroledilenButon.getIcon().equals(FontAwesome.CIRCLE_O)) {
+                            if (kontroledilenButon.getIcon() != null && kontroledilenButon.getIcon().equals(FontAwesome.CIRCLE_O)) {
                                 dikeyButonControl++;
                             }
                         }
                     }
-                }
             }
         }
         return dikeyButonControl;
@@ -319,12 +331,13 @@ public class MyUI extends UI {
             Button kontroledilenButon = (Button) horizontalLayout.getComponent(i);
 
             Resource icon = kontroledilenButon.getIcon();
-            if (icon.equals(FontAwesome.CIRCLE_O)) {
+            if (icon != null && icon.equals(FontAwesome.CIRCLE_O)) {
                 horizontalButtonCount++;
             }
         }
         return horizontalButtonCount;
     }
+
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
