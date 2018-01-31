@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * overridden to add component to the user interface and initialize non-component functionality.
  */
 @Theme("mytheme")
-public class MyUI extends UI implements baseDesignGame {
+public class GameOf8Vizier extends UI implements IBaseDesignGame {
     VerticalLayout mainLayout = new VerticalLayout();
     HorizontalLayout layout = null;
     Button buton;
@@ -124,7 +124,7 @@ public class MyUI extends UI implements baseDesignGame {
         selectedButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-
+                ControlButtons controlButtons = new ControlButtons();
                 int result = 0;
 
                 int xCrossLocal = 0;
@@ -139,7 +139,7 @@ public class MyUI extends UI implements baseDesignGame {
                     selectedButton.setIcon(FontAwesome.CIRCLE_O);
                     selectedButton.removeStyleName(ValoTheme.BUTTON_DANGER);
                     selectedButton.removeStyleName(ValoTheme.BUTTON_FRIENDLY);
-                    ControlWin();
+                    controlButtons.ControlWin(buttonList);
 
                 } else {
                     Map<Integer, Integer> dataSecbtn = (Map<Integer, Integer>) selectedButton.getData();
@@ -154,54 +154,38 @@ public class MyUI extends UI implements baseDesignGame {
                         /**
                          * row button control
                          */
-                        horizontalButtonCount = horizontalButtonControl(horizontalLayout, horizontalButtonCount);
+                        horizontalButtonCount = controlButtons.horizontalButtonControl(horizontalLayout, horizontalButtonCount);
 
                         /**
                          * column button control
                          */
-                        verticalButtonCount = verticalButtonControl(genelKontrol, result, verticalButtonCount);
+                        verticalButtonCount = controlButtons.verticalButtonControl(genelKontrol, result, verticalButtonCount);
 
                         /**
                          Left side cross button control
                          */
-                        crossLeftCount = crossLeftCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossLeftCount);
+                        crossLeftCount = controlButtons.crossLeftCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossLeftCount);
 
                         /**
                          Right side cross button control
                          */
-                        crossRightCount = crossRightCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossRightCount);
+                        crossRightCount = controlButtons.crossRightCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossRightCount);
 
                         if (horizontalButtonCount == 8 && verticalButtonCount == 8 && crossLeftCount == 0 && crossRightCount == 0) {
                             selectedButton.setIcon(FontAwesome.RA);
                             selectedButton.addStyleName(ValoTheme.BUTTON_DANGER);
 
                         }
-                        ControlWin();
+                        controlButtons.ControlWin(buttonList);
                     }
                 }
             }
 
-            private void ControlWin() {
-                List<Button> buttonListForWin = buttonList.stream().filter(button -> (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA))).collect(Collectors.toList());
-                if (buttonListForWin.size() == 8) {
-                    Notification.show("CONGRATULATIONS, YOU WON", Notification.Type.HUMANIZED_MESSAGE);
-                    for (Button button : buttonListForWin) {
-                        button.removeStyleName(ValoTheme.BUTTON_DANGER);
-                        button.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-
-                    }
-                } else {
-                    for (Button button : buttonListForWin) {
-                        button.removeStyleName(ValoTheme.BUTTON_FRIENDLY);
-                        button.addStyleName(ValoTheme.BUTTON_DANGER);
-
-                    }
-                }
-            }
         });
     }
 
-    private void createHorizontalNumberButon(int buttonCaption) {
+    @Override
+    public void createHorizontalNumberButon(int buttonCaption) {
         String buttonCaptions = String.valueOf(buttonCaption);
 
         buton = new Button(buttonCaptions);
@@ -232,7 +216,8 @@ public class MyUI extends UI implements baseDesignGame {
         }
     }
 
-    private void createVerticalNumberButons(int buttonCaption) {
+    @Override
+    public void createVerticalNumberButons(int buttonCaption) {
         String buttonCaptions = String.valueOf(buttonCaption);
 
         buton = new Button(buttonCaptions);
@@ -247,100 +232,8 @@ public class MyUI extends UI implements baseDesignGame {
         buton.setHeight("50px");
     }
 
-    private int crossRightCount(List<Button> buttonList, int xCrossLocal, int yCrossLocal, int crossRightCount) {
-        for (int i = xCrossLocal; i <= 8; i++) {
-            if (yCrossLocal == 1 || i == 8) {
-                xCrossLocal = i;
-                break;
-            }
-            yCrossLocal--;
-        }
-
-        for (Button button : buttonList) {
-            Map<Integer, Integer> MapControlForCrossRightButton = new HashMap<>();
-            MapControlForCrossRightButton.put(xCrossLocal, yCrossLocal);
-            if (button.getData().equals(MapControlForCrossRightButton)) {
-                if (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA)) {
-                    crossRightCount++;
-
-                }
-
-                MapControlForCrossRightButton = new HashMap<>();
-                xCrossLocal = xCrossLocal - 1;
-                yCrossLocal++;
-                MapControlForCrossRightButton.put(xCrossLocal, yCrossLocal);
-            }
-
-        }
-        return crossRightCount;
-    }
-
-    private int crossLeftCount(List<Button> buttonList, int xCrossLocal, int yCrossLocal, int crossLeftCount) {
-
-        for (int i = xCrossLocal; i >= 1; i--) {
-            if (yCrossLocal == 1 || i == 1) {
-                xCrossLocal = i;
-                break;
-            }
-            yCrossLocal--;
-        }
-
-        for (Button button : buttonList) {
-            Map<Integer, Integer> MapControlForCrossLeftButton = new HashMap<>();
-            MapControlForCrossLeftButton.put(xCrossLocal, yCrossLocal);
-            if (button.getData().equals(MapControlForCrossLeftButton)) {
-                if (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA)) {
-                    crossLeftCount++;
-
-                }
-
-                MapControlForCrossLeftButton = new HashMap<>();
-                xCrossLocal = xCrossLocal + 1;
-                yCrossLocal++;
-                MapControlForCrossLeftButton.put(xCrossLocal, yCrossLocal);
-            }
-        }
-
-        return crossLeftCount;
-    }
-
-    private int verticalButtonControl(Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol, int sonuc, int dikeyButonControl) {
-        Set<HorizontalLayout> keys = genelKontrol.keySet();
-        for (HorizontalLayout horizontal : keys) {
-            for (int i = 0; i <= 8; i++) {
-                Button kontroledilenButon = (Button) horizontal.getComponent(i);
-                Map<Integer, Integer> kontroledenDatas = (Map<Integer, Integer>) kontroledilenButon.getData();
-                    Set<Integer> keyList = kontroledenDatas.keySet();
-                    for (Integer keyKontrolEdenData : keyList) {
-                        if (keyKontrolEdenData % 10 == sonuc) {
-                            if (kontroledilenButon.getIcon() != null && kontroledilenButon.getIcon().equals(FontAwesome.CIRCLE_O)) {
-                                dikeyButonControl++;
-                            }
-                        }
-                    }
-            }
-        }
-        return dikeyButonControl;
-
-    }
-
-    private int horizontalButtonControl(HorizontalLayout horizontalLayout, int horizontalButtonCount) {
-
-        for (int i = 1; i <= 8; i++) {
-
-            Button kontroledilenButon = (Button) horizontalLayout.getComponent(i);
-
-            Resource icon = kontroledilenButon.getIcon();
-            if (icon != null && icon.equals(FontAwesome.CIRCLE_O)) {
-                horizontalButtonCount++;
-            }
-        }
-        return horizontalButtonCount;
-    }
-
-
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+    @VaadinServletConfiguration(ui = GameOf8Vizier.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
     }
 }
