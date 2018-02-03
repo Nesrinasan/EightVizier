@@ -11,11 +11,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by Universal on 1/31/2018.
+ * Created by Nesrin ULGAY on 1/31/2018.
  */
-public class ControlButtons {
+public class ActControlOfButtons implements IActControlOfButtons {
 
-    protected int horizontalButtonControl(HorizontalLayout horizontalLayout, int horizontalButtonCount) {
+    @Override
+    public int horizontalButtonControl(HorizontalLayout horizontalLayout, int horizontalButtonCount) {
 
         for (int i = 1; i <= 8; i++) {
 
@@ -29,7 +30,8 @@ public class ControlButtons {
         return horizontalButtonCount;
     }
 
-    protected int verticalButtonControl(Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol, int sonuc, int dikeyButonControl) {
+    @Override
+    public int verticalButtonControl(Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol, int sonuc, int dikeyButonControl) {
         Set<HorizontalLayout> keys = genelKontrol.keySet();
         for (HorizontalLayout horizontal : keys) {
             for (int i = 0; i <= 8; i++) {
@@ -49,7 +51,8 @@ public class ControlButtons {
 
     }
 
-    protected int crossLeftCount(List<Button> buttonList, int xCrossLocal, int yCrossLocal, int crossLeftCount) {
+    @Override
+    public int crossLeftCount(List<Button> buttonList, int xCrossLocal, int yCrossLocal, int crossLeftCount) {
 
         for (int i = xCrossLocal; i >= 1; i--) {
             if (yCrossLocal == 1 || i == 1) {
@@ -78,7 +81,8 @@ public class ControlButtons {
         return crossLeftCount;
     }
 
-    protected int crossRightCount(List<Button> buttonList, int xCrossLocal, int yCrossLocal, int crossRightCount) {
+    @Override
+    public int crossRightCount(List<Button> buttonList, int xCrossLocal, int yCrossLocal, int crossRightCount) {
         for (int i = xCrossLocal; i <= 8; i++) {
             if (yCrossLocal == 1 || i == 8) {
                 xCrossLocal = i;
@@ -106,7 +110,8 @@ public class ControlButtons {
         return crossRightCount;
     }
 
-    protected void ControlWin(List<Button> buttonList ) {
+    @Override
+    public void ControlWin(List<Button> buttonList) {
         List<Button> buttonListForWin = buttonList.stream().filter(button -> (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA))).collect(Collectors.toList());
         if (buttonListForWin.size() == 8) {
             Notification.show("CONGRATULATIONS, YOU WON", Notification.Type.HUMANIZED_MESSAGE);
@@ -123,7 +128,4 @@ public class ControlButtons {
             }
         }
     }
-
-
-
 }

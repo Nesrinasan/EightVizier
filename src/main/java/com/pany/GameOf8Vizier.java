@@ -9,15 +9,8 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-/**
- * This UI is the application entry point. A UI may either represent a browser window
- * (or tab) or some part of a html page where a Vaadin application is embedded.
- * <p>
- * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be
- * overridden to add component to the user interface and initialize non-component functionality.
- */
+
 @Theme("mytheme")
 public class GameOf8Vizier extends UI implements IBaseDesignGame {
     VerticalLayout mainLayout = new VerticalLayout();
@@ -124,7 +117,7 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
         selectedButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                ControlButtons controlButtons = new ControlButtons();
+                ActControlOfButtons actControlOfButtons = new ActControlOfButtons();
                 int result = 0;
 
                 int xCrossLocal = 0;
@@ -139,7 +132,7 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
                     selectedButton.setIcon(FontAwesome.CIRCLE_O);
                     selectedButton.removeStyleName(ValoTheme.BUTTON_DANGER);
                     selectedButton.removeStyleName(ValoTheme.BUTTON_FRIENDLY);
-                    controlButtons.ControlWin(buttonList);
+                    actControlOfButtons.ControlWin(buttonList);
 
                 } else {
                     Map<Integer, Integer> dataSecbtn = (Map<Integer, Integer>) selectedButton.getData();
@@ -154,29 +147,29 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
                         /**
                          * row button control
                          */
-                        horizontalButtonCount = controlButtons.horizontalButtonControl(horizontalLayout, horizontalButtonCount);
+                        horizontalButtonCount = actControlOfButtons.horizontalButtonControl(horizontalLayout, horizontalButtonCount);
 
                         /**
                          * column button control
                          */
-                        verticalButtonCount = controlButtons.verticalButtonControl(genelKontrol, result, verticalButtonCount);
+                        verticalButtonCount = actControlOfButtons.verticalButtonControl(genelKontrol, result, verticalButtonCount);
 
                         /**
                          Left side cross button control
                          */
-                        crossLeftCount = controlButtons.crossLeftCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossLeftCount);
+                        crossLeftCount = actControlOfButtons.crossLeftCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossLeftCount);
 
                         /**
                          Right side cross button control
                          */
-                        crossRightCount = controlButtons.crossRightCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossRightCount);
+                        crossRightCount = actControlOfButtons.crossRightCount(ButtonListWithData(), xCrossLocal, yCrossLocal, crossRightCount);
 
                         if (horizontalButtonCount == 8 && verticalButtonCount == 8 && crossLeftCount == 0 && crossRightCount == 0) {
                             selectedButton.setIcon(FontAwesome.RA);
                             selectedButton.addStyleName(ValoTheme.BUTTON_DANGER);
 
                         }
-                        controlButtons.ControlWin(buttonList);
+                        actControlOfButtons.ControlWin(buttonList);
                     }
                 }
             }
