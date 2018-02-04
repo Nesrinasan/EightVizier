@@ -1,7 +1,6 @@
-package com.pany;
+package com.GameOf8Vizier;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.VerticalLayout;
 
 import java.util.List;
 

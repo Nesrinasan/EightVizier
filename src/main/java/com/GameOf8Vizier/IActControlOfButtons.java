@@ -1,4 +1,4 @@
-package com.pany;
+package com.GameOf8Vizier;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;

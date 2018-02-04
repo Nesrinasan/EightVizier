@@ -1,17 +1,10 @@
-package com.pany;
+package com.GameOf8Vizier;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
-import sun.misc.BASE64Encoder;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
 import java.util.*;
 
 /**

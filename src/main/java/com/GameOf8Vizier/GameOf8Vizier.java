@@ -1,4 +1,4 @@
-package com.pany;
+package com.GameOf8Vizier;
 
 import javax.servlet.annotation.WebServlet;
 
