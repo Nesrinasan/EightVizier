@@ -13,6 +13,7 @@ import java.util.*;
 
 @Theme("mytheme")
 public class GameOf8Vizier extends UI implements IBaseDesignGame {
+
     VerticalLayout mainLayout = new VerticalLayout();
     HorizontalLayout layout = null;
     Button buton;
@@ -21,19 +22,13 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
     Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol;
     List<Button> buttonListExpectForNullData;
 
-    @Override
-    protected void init(VaadinRequest vaadinRequest) {
-        Button button = new Button("Start Game");
-        button.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                putButtonsOnBoard(mainLayout);
-                startGame();
-                button.setEnabled(false);
-            }
-        });
-        mainLayout.addComponent(button);
+    public GameOf8Vizier() {
+        inits();
+        putButtonsOnBoard(mainLayout);
+        startGame();
+    }
+
+    protected void inits() {
         setContent(mainLayout);
     }
 
@@ -223,6 +218,11 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
         }
         buton.setWidth("50px");
         buton.setHeight("50px");
+    }
+
+
+    @Override
+    protected void init(VaadinRequest vaadinRequest) {
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)

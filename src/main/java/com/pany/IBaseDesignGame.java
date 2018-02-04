@@ -10,8 +10,6 @@ public interface IBaseDesignGame {
 
     public void createGameButtons();
 
-//    public void createGameButtons(Button button);
-
     public void addButtonLocal(int buttonYLocal, int buttonXLocal);
 
     public void putButtonsOnBoard(VerticalLayout verticalLayout);
