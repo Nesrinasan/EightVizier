@@ -18,7 +18,9 @@ public class ActControlOfButtons implements IActControlOfButtons {
     @Override
     public int horizontalButtonControl(HorizontalLayout horizontalLayout, int horizontalButtonCount) {
 
-        for (int i = 1; i <= 8; i++) {
+        int i = 1;
+
+        while (i <= 8) {
 
             Button kontroledilenButon = (Button) horizontalLayout.getComponent(i);
 
@@ -26,21 +28,23 @@ public class ActControlOfButtons implements IActControlOfButtons {
             if (icon != null && icon.equals(FontAwesome.CIRCLE_O)) {
                 horizontalButtonCount++;
             }
+            i++;
         }
         return horizontalButtonCount;
     }
 
+
     @Override
-    public int verticalButtonControl(Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol, int sonuc, int dikeyButonControl) {
+    public int verticalButtonControl(Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol, int result, int dikeyButonControl) {
         Set<HorizontalLayout> keys = genelKontrol.keySet();
         for (HorizontalLayout horizontal : keys) {
             for (int i = 0; i <= 8; i++) {
-                Button kontroledilenButon = (Button) horizontal.getComponent(i);
-                Map<Integer, Integer> kontroledenDatas = (Map<Integer, Integer>) kontroledilenButon.getData();
-                Set<Integer> keyList = kontroledenDatas.keySet();
-                for (Integer keyKontrolEdenData : keyList) {
-                    if (keyKontrolEdenData % 10 == sonuc) {
-                        if (kontroledilenButon.getIcon() != null && kontroledilenButon.getIcon().equals(FontAwesome.CIRCLE_O)) {
+                Button controlledButton = (Button) horizontal.getComponent(i);
+                Map<Integer, Integer> controlledOfButtonData = (Map<Integer, Integer>) controlledButton.getData();
+                Set<Integer> keyList = controlledOfButtonData.keySet();
+                for (Integer controlledData : keyList) {
+                    if (controlledData % 10 == result) {
+                        if (controlledButton.getIcon() != null && controlledButton.getIcon().equals(FontAwesome.CIRCLE_O)) {
                             dikeyButonControl++;
                         }
                     }
@@ -48,7 +52,6 @@ public class ActControlOfButtons implements IActControlOfButtons {
             }
         }
         return dikeyButonControl;
-
     }
 
     @Override

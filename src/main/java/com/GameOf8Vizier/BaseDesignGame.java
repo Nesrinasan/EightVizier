@@ -26,9 +26,7 @@ public class BaseDesignGame implements IBaseDesignGame {
     public void addButtonLocal(int buttonYLocal, int buttonXLocal, Button button) {
         Map<Integer, Integer> butonLocals = new HashMap<>();
         butonLocals.put(buttonXLocal, buttonYLocal);
-        if (button != null) {
-            button.setData(butonLocals);
-        }
+        button.setData(butonLocals);
     }
 
     @Override
@@ -72,13 +70,15 @@ public class BaseDesignGame implements IBaseDesignGame {
         return buton;
     }
 
-    private void restartGame(List<Button>  buttonList) {
-        for (Button button : buttonList) {
+    private void restartGame(List<Button> buttonList) {
+
+        buttonList.stream().forEach(button -> {
             if (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA)) {
                 button.setIcon(FontAwesome.CIRCLE_O);
                 button.removeStyleName(ValoTheme.BUTTON_DANGER);
                 button.removeStyleName(ValoTheme.BUTTON_FRIENDLY);
             }
-        }
+
+        });
     }
 }
