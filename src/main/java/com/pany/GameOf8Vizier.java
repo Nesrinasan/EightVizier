@@ -12,7 +12,7 @@ import java.util.*;
 
 
 @Theme("mytheme")
-public class GameOf8Vizier extends UI implements IBaseDesignGame {
+public class GameOf8Vizier extends UI  {
 
     VerticalLayout mainLayout = new VerticalLayout();
     HorizontalLayout layout = null;
@@ -32,8 +32,9 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
         setContent(mainLayout);
     }
 
-    @Override
     public void putButtonsOnBoard(VerticalLayout mainLayout) {
+
+        BaseDesignGame baseDesignGame = new BaseDesignGame();
 
         horLayouts = new ArrayList<>();
         buttonList = new ArrayList<>();
@@ -50,15 +51,15 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
             for (int verticalButtonCount = 0; verticalButtonCount <= 8; verticalButtonCount++) {
 
                 if (horizontalButtonCount == 0) {
-                    createHorizontalNumberButon(verticalButtonCount);
+                    buton = baseDesignGame.createHorizontalNumberButon(verticalButtonCount, buton, buttonList);
                 } else if (horizontalButtonCount != 0 && verticalButtonCount == 0) {
-                    createVerticalNumberButons(horizontalButtonCount);
+                    buton = baseDesignGame.createVerticalNumberButons(horizontalButtonCount, buton);
                 } else {
-                    createGameButtons();
+                    buton = baseDesignGame.createGameButtons(buton);
 
                 }
                 buttonXLocal++;
-                addButtonLocal(buttonYLocal, buttonXLocal);
+                baseDesignGame.addButtonLocal(buttonYLocal, buttonXLocal, buton);
                 verticalButtonsControllerMap.put(buttonXLocal, FontAwesome.CIRCLE_O);
                 layout.addComponent(buton);
                 buttonList.add(buton);
@@ -71,21 +72,6 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
         }
     }
 
-    @Override
-    public void addButtonLocal(int buttonYLocal, int buttonXLocal) {
-        Map<Integer, Integer> butonLocals = new HashMap<>();
-        butonLocals.put(buttonXLocal, buttonYLocal);
-        buton.setData(butonLocals);
-    }
-
-    @Override
-    public void createGameButtons() {
-        buton = new Button();
-        buton.setWidth("50px");
-        buton.setHeight("50px");
-        buton.setIcon(FontAwesome.CIRCLE_O);
-    }
-
     private void startGame() {
 
         for (HorizontalLayout horizontalLayout : horLayouts) {
@@ -95,7 +81,6 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
             }
         }
     }
-
 
     private List<Button> ButtonListWithData() {
         buttonListExpectForNullData = new ArrayList<>();
@@ -171,55 +156,6 @@ public class GameOf8Vizier extends UI implements IBaseDesignGame {
 
         });
     }
-
-    @Override
-    public void createHorizontalNumberButon(int buttonCaption) {
-        String buttonCaptions = String.valueOf(buttonCaption);
-
-        buton = new Button(buttonCaptions);
-        if (buttonCaption == 0) {
-            buton.setIcon(FontAwesome.TIMES_CIRCLE);
-            buton.setCaption("");
-            buton.setEnabled(true);
-            buton.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(Button.ClickEvent clickEvent) {
-                    restartGame();
-                }
-            });
-        } else {
-            buton.setEnabled(false);
-        }
-        buton.setWidth("50px");
-        buton.setHeight("50px");
-    }
-
-    private void restartGame() {
-        for (Button button : buttonList) {
-            if (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA)) {
-                button.setIcon(FontAwesome.CIRCLE_O);
-                button.removeStyleName(ValoTheme.BUTTON_DANGER);
-                button.removeStyleName(ValoTheme.BUTTON_FRIENDLY);
-            }
-        }
-    }
-
-    @Override
-    public void createVerticalNumberButons(int buttonCaption) {
-        String buttonCaptions = String.valueOf(buttonCaption);
-
-        buton = new Button(buttonCaptions);
-        if (buttonCaption == 0) {
-            buton.setIcon(FontAwesome.TIMES_CIRCLE);
-            buton.setCaption("");
-            buton.setEnabled(true);
-        } else {
-            buton.setEnabled(false);
-        }
-        buton.setWidth("50px");
-        buton.setHeight("50px");
-    }
-
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
