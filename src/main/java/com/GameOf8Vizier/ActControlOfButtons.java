@@ -22,10 +22,10 @@ public class ActControlOfButtons implements IActControlOfButtons {
 
         while (i <= 8) {
 
-            Button kontroledilenButon = (Button) horizontalLayout.getComponent(i);
+            Button kontroledilenButon = (Button) horizontalLayout.getComponent (i);
 
-            Resource icon = kontroledilenButon.getIcon();
-            if (icon != null && icon.equals(FontAwesome.CIRCLE_O)) {
+            Resource icon = kontroledilenButon.getIcon ();
+            if (icon != null && icon.equals (FontAwesome.CIRCLE_O)) {
                 horizontalButtonCount++;
             }
             i++;
@@ -36,15 +36,15 @@ public class ActControlOfButtons implements IActControlOfButtons {
 
     @Override
     public int verticalButtonControl(Map<HorizontalLayout, Map<Integer, FontAwesome>> genelKontrol, int result, int dikeyButonControl) {
-        Set<HorizontalLayout> keys = genelKontrol.keySet();
+        Set<HorizontalLayout> keys = genelKontrol.keySet ();
         for (HorizontalLayout horizontal : keys) {
             for (int i = 0; i <= 8; i++) {
-                Button controlledButton = (Button) horizontal.getComponent(i);
-                Map<Integer, Integer> controlledOfButtonData = (Map<Integer, Integer>) controlledButton.getData();
-                Set<Integer> keyList = controlledOfButtonData.keySet();
+                Button controlledButton = (Button) horizontal.getComponent (i);
+                Map<Integer, Integer> controlledOfButtonData = (Map<Integer, Integer>) controlledButton.getData ();
+                Set<Integer> keyList = controlledOfButtonData.keySet ();
                 for (Integer controlledData : keyList) {
                     if (controlledData % 10 == result) {
-                        if (controlledButton.getIcon() != null && controlledButton.getIcon().equals(FontAwesome.CIRCLE_O)) {
+                        if (controlledButton.getIcon () != null && controlledButton.getIcon ().equals (FontAwesome.CIRCLE_O)) {
                             dikeyButonControl++;
                         }
                     }
@@ -66,18 +66,18 @@ public class ActControlOfButtons implements IActControlOfButtons {
         }
 
         for (Button button : buttonList) {
-            Map<Integer, Integer> MapControlForCrossLeftButton = new HashMap<>();
-            MapControlForCrossLeftButton.put(xCrossLocal, yCrossLocal);
-            if (button.getData().equals(MapControlForCrossLeftButton)) {
-                if (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA)) {
+            Map<Integer, Integer> MapControlForCrossLeftButton = new HashMap<> ();
+            MapControlForCrossLeftButton.put (xCrossLocal, yCrossLocal);
+            if (button.getData ().equals (MapControlForCrossLeftButton)) {
+                if (button.getIcon () != null && button.getIcon ().equals (FontAwesome.RA)) {
                     crossLeftCount++;
 
                 }
 
-                MapControlForCrossLeftButton = new HashMap<>();
+                MapControlForCrossLeftButton = new HashMap<> ();
                 xCrossLocal = xCrossLocal + 1;
                 yCrossLocal++;
-                MapControlForCrossLeftButton.put(xCrossLocal, yCrossLocal);
+                MapControlForCrossLeftButton.put (xCrossLocal, yCrossLocal);
             }
         }
 
@@ -95,18 +95,18 @@ public class ActControlOfButtons implements IActControlOfButtons {
         }
 
         for (Button button : buttonList) {
-            Map<Integer, Integer> MapControlForCrossRightButton = new HashMap<>();
-            MapControlForCrossRightButton.put(xCrossLocal, yCrossLocal);
-            if (button.getData().equals(MapControlForCrossRightButton)) {
-                if (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA)) {
+            Map<Integer, Integer> MapControlForCrossRightButton = new HashMap<> ();
+            MapControlForCrossRightButton.put (xCrossLocal, yCrossLocal);
+            if (button.getData ().equals (MapControlForCrossRightButton)) {
+                if (button.getIcon () != null && button.getIcon ().equals (FontAwesome.RA)) {
                     crossRightCount++;
 
                 }
 
-                MapControlForCrossRightButton = new HashMap<>();
+                MapControlForCrossRightButton = new HashMap<> ();
                 xCrossLocal = xCrossLocal - 1;
                 yCrossLocal++;
-                MapControlForCrossRightButton.put(xCrossLocal, yCrossLocal);
+                MapControlForCrossRightButton.put (xCrossLocal, yCrossLocal);
             }
 
         }
@@ -115,20 +115,21 @@ public class ActControlOfButtons implements IActControlOfButtons {
 
     @Override
     public void ControlWin(List<Button> buttonList) {
-        List<Button> buttonListForWin = buttonList.stream().filter(button -> (button.getIcon() != null && button.getIcon().equals(FontAwesome.RA))).collect(Collectors.toList());
-        if (buttonListForWin.size() == 8) {
-            Notification.show("CONGRATULATIONS, YOU WON", Notification.Type.HUMANIZED_MESSAGE);
-            for (Button button : buttonListForWin) {
-                button.removeStyleName(ValoTheme.BUTTON_DANGER);
-                button.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        List<Button> buttonListForWin = buttonList.stream ().filter (button -> (button.getIcon () != null && button.getIcon ().equals (FontAwesome.RA))).collect (Collectors.toList ());
+        if (buttonListForWin.size () == 8) {
+            Notification.show ("CONGRATULATIONS, YOU WON", Notification.Type.ERROR_MESSAGE);
 
-            }
+            buttonListForWin.stream ().forEach (button -> {
+                button.removeStyleName (ValoTheme.BUTTON_DANGER);
+                button.addStyleName (ValoTheme.BUTTON_FRIENDLY);
+            });
+
         } else {
-            for (Button button : buttonListForWin) {
-                button.removeStyleName(ValoTheme.BUTTON_FRIENDLY);
-                button.addStyleName(ValoTheme.BUTTON_DANGER);
+            buttonListForWin.stream ().forEach (button -> {
+                button.removeStyleName (ValoTheme.BUTTON_FRIENDLY);
+                button.addStyleName (ValoTheme.BUTTON_DANGER);
+            });
 
-            }
         }
     }
 }

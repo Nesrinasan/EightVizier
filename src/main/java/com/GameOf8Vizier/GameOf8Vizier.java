@@ -23,12 +23,13 @@ public class GameOf8Vizier extends UI {
 
     public GameOf8Vizier() {
         inits();
-        putButtonsOnBoard(mainLayout);
-        startGame();
+
     }
 
     protected void inits() {
         setContent(mainLayout);
+        putButtonsOnBoard(mainLayout);
+        startGame();
     }
 
     public void putButtonsOnBoard(VerticalLayout mainLayout) {
@@ -57,8 +58,9 @@ public class GameOf8Vizier extends UI {
                     buton = baseDesignGame.createGameButtons(buton);
 
                 }
-                buttonXLocal++;
+
                 baseDesignGame.addButtonLocal(buttonYLocal, buttonXLocal, buton);
+                buttonXLocal++;
                 verticalButtonsControllerMap.put(buttonXLocal, FontAwesome.CIRCLE_O);
                 layout.addComponent(buton);
                 buttonList.add(buton);
